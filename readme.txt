@@ -1,140 +1,33 @@
-🚀 1LP Programming Language Compiler (Front-to-Back)
-Proyek Akhir Mata Kuliah Teknik Kompilasi Dosen: Sulistyo Puspitodjati
-
-📝 Deskripsi Proyek
-Proyek ini merupakan implementasi Compiler Lengkap (Front-to-Back) untuk bahasa pemrograman kustom bernama "1LP". Berbeda dengan versi interpreter sebelumnya, versi ini tidak hanya menghitung hasil, tetapi menerjemahkan kode sumber menjadi Intermediate Code (TAC) dan Target Code (Assembly x86).
-
-Compiler ini dibangun menggunakan bahasa Python dari nol (from scratch) tanpa menggunakan library parser eksternal seperti PLY atau Yacc.
-
-Fitur Utama:
-Lexical Analysis (Scanner): Tokenisasi menggunakan Regular Expression.
-
-Syntax Analysis (Parser): Menggunakan metode Recursive Descent (LL(1)).
-
-Semantic Analysis: Validasi variabel dan manajemen Symbol Table.
-
-Intermediate Code Generation (ICG): Menghasilkan Three-Address Code (TAC/Quadruples).
-
-Code Generation (Backend): Menerjemahkan TAC menjadi kode Assembly x86 (Intel Syntax) yang siap dijalankan.
-
-Robust Error Handling: Implementasi Panic Mode Recovery untuk mendeteksi multiple error tanpa crash.
-
-User Interface: Tampilan terminal yang rapi dan berwarna (Syntax Highlighting).
-
-👥 Informasi Kelompok
-Kelas: 4IA04 Nama Anggota:
-
-Muhammad Muhsin Azzam (51422095)
-
-Pasya Shafaa Aaqila (51422781)
-
-Dio Adeliya Putra (50422434)
-
-Miskah Nurzakwan W (50922783)
-
-Muhammad Alfian Ricki R (50422734)
-
-📂 Struktur Folder
-Plaintext
-
-Compiler_Front2Back/
+🚀 1LP Programming Language Compiler (Front-to-Back)Proyek Akhir Mata Kuliah Teknik KompilasiDosen: Sulistyo Puspitodjati📝 Deskripsi ProyekProyek ini merupakan implementasi Compiler Lengkap (Front-to-Back) untuk bahasa pemrograman kustom bernama "1LP".Berbeda dengan versi sebelumnya yang hanya sebatas interpreter, versi final ini adalah True Compiler yang menerjemahkan kode sumber tingkat tinggi menjadi Kode Rakitan (Assembly x86) yang siap dijalankan oleh mesin.Proyek ini dibangun menggunakan bahasa Python dari nol (from scratch) tanpa ketergantungan pada library parser eksternal seperti PLY, Yacc, atau ANTLR.✨ Fitur Unggulan:Full Pipeline: Lexer $\rightarrow$ Parser $\rightarrow$ Semantic $\rightarrow$ ICG $\rightarrow$ Backend.Code Generation: Menghasilkan file output .asm dengan sintaks Assembly x86 (Intel).Intermediate Code (TAC): Menggunakan representasi Three-Address Code (Quadruples) untuk standarisasi logika.Robust Error Recovery: Implementasi Panic Mode yang mampu memulihkan diri dari kesalahan sintaks (misal: kurang titik koma) dan melanjutkan kompilasi baris berikutnya.Strict Semantics: Validasi ketat untuk variabel yang belum dideklarasikan (Undeclared Variable Check).Rich UI: Tampilan terminal interaktif dengan pewarnaan (Syntax Highlighting) untuk membedakan log sukses, warning, dan error.👥 Informasi KelompokKelas: 4IA04Nama Anggota:Muhammad Muhsin Azzam (51422095)Pasya Shafaa Aaqila (51422781)Dio Adeliya Putra (50422434)Miskah Nurzakwan W (50922783)Muhammad Alfian Ricki R (50422734)📂 Struktur FolderPlaintextCompiler_Front2Back/
 │
 ├── src/                      <-- Source Code Utama
-│   ├── lexer.py              # Scanner (Membaca karakter jadi Token)
-│   ├── parser_icg.py         # Parser modifikasi untuk generate ICG & Error Recovery
-│   ├── icg.py                # Modul Intermediate Code (Quadruples)
-│   ├── backend.py            # Modul Sintesis (Translator ke Assembly x86)
-│   ├── colors.py             # Helper untuk pewarnaan output terminal
-│   └── main_full.py          # Entry point utama (Driver Front-to-Back)
+│   ├── lexer.py              # Scanner: Mengubah teks menjadi Token stream
+│   ├── parser_icg.py         # Parser: Analisis Sintaks, Semantik & Panic Mode
+│   ├── icg.py                # ICG: Generator Three-Address Code (TAC)
+│   ├── backend.py            # Backend: Penerjemah TAC ke Assembly x86
+│   ├── colors.py             # UI: Modul pewarnaan output terminal
+│   └── main_full.py          # Driver: Program utama yang menjalankan semua fase
 │
-├── tests/                    <-- Kumpulan Test Case
-│   ├── valid_code.txt        # Kode valid (Assignment, Math, Print, Nested)
-│   ├── error_syntax.txt      # Tes Error Recovery (Kurang titik koma, dll)
-│   └── error_lexical.txt     # Tes Karakter Ilegal
+├── tests/                    <-- File Uji Coba (Test Cases)
+│   ├── valid_code.txt        # Kode valid (Math, Nested Expression, Print)
+│   ├── error_syntax.txt      # Uji fitur Panic Mode (Lupa titik koma)
+│   ├── error_semantic.txt    # Uji validasi variabel (Typo nama variabel)
+│   └── error_lexical.txt     # Uji karakter ilegal
 │
-├── output.asm                # Hasil Output Assembly (Generated)
+├── output.asm                # Hasil Output Assembly (Generated File)
 └── README.txt                # Dokumentasi proyek
-🛠️ Spesifikasi Teknis (Alur Kompilasi)
-1. Frontend (Analisa)
-Grammar: LL(1) modifikasi. Mendukung prioritas operator (P1OP/P2OP) dan nested expression.
+🛠️ Spesifikasi Teknis1. Frontend (Analisa)Lexer: Menggunakan Regex untuk mengenali token ID, NUM, ASSIGN, PRINT, Operator Matematika, dan (Stm, Exp).Parser: Menggunakan metode Recursive Descent Parsing (Top-Down LL(1)).Semantic: Menggunakan Symbol Table (Set) untuk memastikan setiap variabel yang digunakan sudah di-assign sebelumnya.2. Intermediate Code (Tengah)Parser mengubah ekspresi matematika kompleks menjadi urutan instruksi sederhana.Menggunakan variabel temporer (t1, t2, t3...) secara otomatis.Format: Result = Operand1 Operator Operand23. Backend (Sintesis)Menerjemahkan instruksi perantara menjadi instruksi CPU nyata.Target: Assembly x86 (Intel Syntax).Register: Menggunakan EAX untuk akumulator, EBX untuk pembagi, dan EDX untuk sisa bagi.Stack: Mengelola PUSH/POP untuk pemanggilan fungsi print.🚀 Cara Menjalankan ProgramPastikan Python 3 sudah terinstall. Jalankan perintah melalui terminal dari folder root proyek.A. Kompilasi Kode Valid (Normal)Perintah ini akan menghasilkan file output.asm.Bashpython src/main_full.py tests/valid_code.txt
+Output: Tampilan fase Lexing, Parsing, tabel TAC, dan preview Assembly berwarna hijau (Sukses).B. Uji Error Recovery (Panic Mode)Mendemokan kemampuan compiler untuk tidak crash saat ada error sintaks.Bashpython src/main_full.py tests/error_syntax.txt
+Output: Pesan error berwarna MERAH, diikuti pesan Recovery berwarna KUNING. Compiler tetap lanjut memproses baris yang benar.C. Uji Validasi SemantikMendemokan deteksi variabel yang belum didefinisikan.Bashpython src/main_full.py tests/error_semantic.txt
+Output: Pesan error [Semantic Error] Variabel '...' belum didefinisikan.📊 Contoh Hasil Output (TAC vs Assembly)Berikut adalah transformasi data yang terjadi di dalam compiler ini:1. Source Code (Input):Plaintextc := a + b * 2;
+2. Intermediate Code / TAC (Internal):Plaintextt1 = b * 2
+c = a + t1
+3. Assembly x86 (Output):Cuplikan kode; t1 = b * 2
+MOV EAX, b
+IMUL EAX, 2
+MOV [t1], EAX
 
-Panic Mode: Jika parser menemukan error, ia akan melakukan sinkronisasi (skip token) hingga menemukan delimiter (;) agar bisa melanjutkan pemeriksaan baris berikutnya.
-
-2. Intermediate Code (Tengah)
-Parser tidak langsung menghitung nilai, melainkan memanggil fungsi emit().
-
-Menghasilkan instruksi atomik dalam format: Result = Arg1 Op Arg2.
-
-Variabel sementara (t1, t2, dst) dibuat otomatis untuk menampung hasil perhitungan bertingkat.
-
-3. Backend (Sintesis)
-Membaca instruksi ICG.
-
-Memetakan instruksi ke Register CPU x86 (EAX, EBX, EDX).
-
-Mengelola Stack Pointer (ESP) untuk operasi fungsi print.
-
-Output berupa file .asm standar Linux (Global _start).
-
-🚀 Cara Menjalankan Program
-Prasyarat: Python 3.x terinstall.
-
-Langkah-langkah:
-Buka Terminal / CMD.
-
-Masuk ke direktori root proyek.
-
-Jalankan perintah berikut:
-
-A. Menjalankan Kompilasi Penuh (Valid Code):
-
-Bash
-
-python src/main_full.py tests/valid_code.txt
-Ekspektasi: Tampil visualisasi Fase 1-4 di terminal dan file output.asm terbentuk.
-
-B. Menguji Ketahanan Error (Panic Mode):
-
-Bash
-
-python src/main_full.py tests/error_syntax.txt
-Ekspektasi: Compiler menampilkan pesan error merah, melakukan recovery (kuning), dan tetap berhasil men-generate Assembly untuk bagian kode yang valid.
-
-📊 Contoh Hasil Output Terminal
-Saat menjalankan valid_code.txt, output akan menampilkan tahapan fase:
-
-Plaintext
-
-==================================================
- RUNNING COMPILER: tests/valid_code.txt
-==================================================
-
-[PHASE 1] Lexical Analysis...
-   Token Stream: [Token(ID, a), Token(ASSIGN, :=), ...]
-
-[PHASE 2 & 3] Parsing & Intermediate Code Generation...
-   [INTERMEDIATE CODE - TAC]
-   01: a = 10
-   02: t1 = b * 4
-   03: t2 = t1 / 2
-   04: t3 = a + t2
-   ...
-
-[PHASE 4] Backend Code Generation...
-
-[TARGET CODE - ASSEMBLY PREVIEW]
-.data
-.text
-global _start
-_start:
-    ; a = 10
-    MOV EAX, 10
-    MOV [a], EAX
-    ; t1 = b * 4
-    MOV EAX, b
-    IMUL EAX, 4
-    MOV [t1], EAX
-    ...
-
---------------------------------------------------
-✅ [SUCCESS] Kompilasi Selesai! Output disimpan di 'output.asm'
+; c = a + t1
+MOV EAX, a
+ADD EAX, t1
+MOV [c], EAX
