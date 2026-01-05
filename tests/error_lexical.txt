@@ -1,0 +1,2 @@
+uang := $ 100;
+print(uang)
